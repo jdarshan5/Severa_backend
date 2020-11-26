@@ -25,7 +25,7 @@ def send_message(request):
         conversation_serializer = UserConversationSerializer(data=data)
         if conversation_serializer.is_valid():
             conversation = conversation_serializer.save()
-            msg_data = {'conversationId': conversation, 'messageSentTime': request.data['msgSentTime']}
+            msg_data = {'conversationId': conversation, '': ''}
             UserMessagesSerializer(data=msg_data)
     else:
         pass

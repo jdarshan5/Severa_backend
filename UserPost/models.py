@@ -22,7 +22,7 @@ class UserPost(models.Model):
     userProfileId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     postId = models.UUIDField(default=uuid.uuid4, editable=False)
     postContent = models.FileField(upload_to='UserPost/', null=False)
-    postDescription = models.TextField(null=True)
+    postDescription = models.TextField(null=True, blank=True)
     postTime = models.DateTimeField(auto_now_add=True)
     postStatus = models.IntegerField(default=0)
 
@@ -66,7 +66,7 @@ class PostComment(models.Model):
                                on_delete=models.CASCADE,
                                related_name='postIdOfThePostWhichGotCommented')
     commentId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    commentDescription = models.TextField(default='')
+    commentDescription = models.TextField(blank=False, null=False)
     commentTime = models.DateTimeField(auto_now_add=True)
     commentStatus = models.IntegerField(default=0)
 
@@ -83,7 +83,7 @@ class PostSubComment(models.Model):
     userProfileId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     parentComment = models.ForeignKey(PostComment, on_delete=models.CASCADE)
     subCommentId = models.UUIDField(default=uuid.uuid4, editable=False)
-    commentDescription = models.TextField(default='', null=False)
+    commentDescription = models.TextField(blank=False, null=False)
     commentTime = models.DateTimeField(auto_now_add=True)
     commentStatus = models.IntegerField(default=0)
 

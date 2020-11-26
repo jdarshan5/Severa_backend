@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import UserConversation, UserMessages
+from .models import UserConversation, UserMessages, SharedFile
 
 
 class UserConversationSerializer(serializers.ModelSerializer):
@@ -11,5 +11,11 @@ class UserConversationSerializer(serializers.ModelSerializer):
 class UserMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMessages
-        fields = ['conversationId', 'messageSentTime', 'messageReceivedTime', 'messageType', 'messageContent',
+        fields = ['conversationId', 'messageSentTime', 'messageReceivedTime', 'messageReference', 'messageContent',
                   'messageTypeExtension', 'messageStatus']
+
+
+class SharedFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SharedFile
+        fields = ['referenceId', 'data']
