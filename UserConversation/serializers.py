@@ -11,8 +11,8 @@ class UserConversationSerializer(serializers.ModelSerializer):
 class UserMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMessages
-        fields = ['conversationId', 'messageSentTime', 'messageReceivedTime', 'messageType', 'messageContent',
-                  'messageTypeExtension', 'messageStatus']
+        fields = ['conversationId', 'messageId', 'messageSentTime', 'messageReceivedTime', 'messageType',
+                  'messageContent', 'messageStatus', 'messageReadTime']
 
 
 class SharedFileSerializer(serializers.ModelSerializer):

@@ -10,5 +10,6 @@ urlpatterns = [
     path('', include('UserProfiles.urls')),
     path('', include('UserRelationship.urls')),
     path('', include('UserPost.urls')),
-    path('', include('ProfileSetting.urls'))
+    path('', include('ProfileSetting.urls')),
+    path('', include('UserConversation.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

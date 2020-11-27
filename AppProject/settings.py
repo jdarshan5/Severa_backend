@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'UserRelationship.apps.UserrelationshipConfig',
     'UserPost.apps.UserpostConfig',
     # 'UserMoment.apps.UsermomentConfig',
-    # 'UserConversation.apps.UserconversationConfig',
+    'UserConversation.apps.UserconversationConfig',
     'Hashtags.apps.HashtagsConfig',
     'ProfileSetting.apps.ProfilesettingConfig',
 ]

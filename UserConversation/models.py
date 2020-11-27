@@ -14,7 +14,7 @@ class UserConversation(models.Model):
     messageFrom     : userProfileId of the message sender.    E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     messageReceiver : userProfileId of the message receiver.  E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     """
-    conversationId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    conversationId = models.UUIDField(default=uuid.uuid4, editable=False)
     messageSender = models.ForeignKey(UserProfile,
                                       on_delete=models.CASCADE,
                                       related_name='userProfileIdOfTheMessageSender')
@@ -41,12 +41,12 @@ class UserMessages(models.Model):
     """
     conversationId = models.ForeignKey(UserConversation, on_delete=models.CASCADE)
     messageId = models.UUIDField(default=uuid.uuid4, editable=False)
-    messageSentTime = models.DateTimeField(auto_now_add=True, blank=False, null=False)
-    messageReceivedTime = models.DateTimeField(blank=True, null=False)
+    messageSentTime = models.DateTimeField(auto_now_add=True)
+    messageReceivedTime = models.DateTimeField(blank=True, null=True)
     messageType = models.IntegerField(default=0)
     messageContent = models.TextField()
     messageStatus = models.IntegerField(default=1)
-    messageReadTime = models.DateTimeField(blank=True, null=False)
+    messageReadTime = models.DateTimeField(blank=True, null=True)
 
 
 class SharedFile(models.Model):
