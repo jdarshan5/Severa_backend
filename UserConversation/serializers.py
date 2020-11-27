@@ -11,7 +11,7 @@ class UserConversationSerializer(serializers.ModelSerializer):
 class UserMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMessages
-        fields = ['conversationId', 'messageSentTime', 'messageReceivedTime', 'messageReference', 'messageContent',
+        fields = ['conversationId', 'messageSentTime', 'messageReceivedTime', 'messageType', 'messageContent',
                   'messageTypeExtension', 'messageStatus']
 
 

@@ -32,7 +32,7 @@ class UserMessages(models.Model):
     conversationId        : Conversation id for two users.               E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     messageSentTime       : Time when the sender sends the message.      E.g.: datetime.datetime(2020, 10, 18, 19, 39, 6, 507584)
     messageReceivedTime   : Time when the receiver receives the message. E.g.: datetime.datetime(2020, 10, 18, 19, 39, 6, 507584)
-    messageReference      : Type of the message.                         E.g.: 0-Text, 1-Photo, 1-Video, 1-Audio, 2-Shared Post
+    messageType           : Type of the message.                         E.g.: 0-Text, 1-Photo, 1-Video, 1-Audio, 2-Shared Post
     messageContent        : Binary data of the Message.                  E.g.: For text, simple text data will be stored,
         For Image, Video, a referenceId will be stored in the filed E.g.: a uuid
         For post, a uuid of the post will be stored
@@ -41,12 +41,12 @@ class UserMessages(models.Model):
     """
     conversationId = models.ForeignKey(UserConversation, on_delete=models.CASCADE)
     messageId = models.UUIDField(default=uuid.uuid4, editable=False)
-    messageSentTime = models.DateTimeField(auto_now_add=True)
-    messageReceivedTime = models.DateTimeField(blank=True)
-    messageReference = models.IntegerField(default=0)
+    messageSentTime = models.DateTimeField(auto_now_add=True, blank=False, null=False)
+    messageReceivedTime = models.DateTimeField(blank=True, null=False)
+    messageType = models.IntegerField(default=0)
     messageContent = models.TextField()
     messageStatus = models.IntegerField(default=1)
-    messageReadTime = models.DateTimeField()
+    messageReadTime = models.DateTimeField(blank=True, null=False)
 
 
 class SharedFile(models.Model):
