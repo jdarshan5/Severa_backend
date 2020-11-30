@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from UserProfiles.models import UserProfile
 
-from UserConversation.models import UserConversation, UserMessages
+from UserConversation.models import UserConversation, UserMessages, SharedFile
 
 from UserConversation.serializers import UserConversationSerializer, UserMessagesSerializer, SharedFileSerializer
 
@@ -59,3 +59,21 @@ def send_message(request):
             return Response(user_message_serializer.data)
         else:
             return Response(user_message_serializer.errors)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_conversation(request):
+    pass
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_messages(request):
+    pass
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_a_message(request):
+    pass

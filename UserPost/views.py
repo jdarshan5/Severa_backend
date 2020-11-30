@@ -192,7 +192,7 @@ def post_comment(request):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_comment(request):
+def delete_post_comment(request):
     user_account = request.user
     user_profile = UserProfile.objects.get(userId=user_account)
     comment = PostComment.objects.filter(userProfileId=user_profile).filter(postId=request.data['postId'])\
@@ -221,7 +221,7 @@ def post_sub_comment(request):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_sub_comment(request):
+def delete_post_sub_comment(request):
     user_account = request.user
     user_profile = UserProfile.objects.get(userId=user_account)
     comment = PostSubComment.objects.filter(userProfileId=user_profile).filter(postId=request.data['postId']) \
@@ -233,7 +233,7 @@ def delete_sub_comment(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def add_user_tag(request):
+def add_user_tag_in_post(request):
     data = {'userProfileId': UserProfile.objects.get(userId=request.data['taggedUser']),
             'postId': request.data['postId']}
     serializer = PostTagSerializer(data=data)

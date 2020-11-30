@@ -9,6 +9,8 @@ from .serializers import RegistrationSerializer
 
 from Account.serializers import AccountSerializer
 
+from Account.models import Account
+
 from django.contrib.auth.hashers import check_password
 
 # Create your views here.
@@ -16,10 +18,10 @@ from django.contrib.auth.hashers import check_password
 
 @api_view(['POST', ])
 def registration_view(request):
-    # View to register a new user which creates an Account with userid, useremail, name(userName) and password.
-    # and by this account's instance this view also creates UserProfiles object simultaneously.
+    """View to register a new user which creates an Account with userid, user_email, name(userName) and password.
+    and by this account's instance this view also creates UserProfiles object simultaneously.
 
-    # Checking whether the request is POST request or not, if not it will automatically raise an Exception.
+    Checking whether the request is POST request or not, if not it will automatically raise an Exception."""
     if request.method == 'POST':
         serializer = RegistrationSerializer(data=request.data)
         data = {}
@@ -97,3 +99,20 @@ def change_name(request):
 @permission_classes([IsAuthenticated])
 def reset_password(request):
     pass
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_userid(request):
+    """
+    This view checks whether a userid passed as parameter already exists in the Database or not.
+    If there exists a userid then return an error saying UserId exists, else return success.
+    :param request:
+    :return:
+    """
+    requested_userid = request.data['userId']
+    userid_account = Account.objects.get(userid=requested_userid)
+    if not userid_account:
+        return Response({0})
+    else:
+        return Response({'Error': 'Userid exists.'})
