@@ -1,0 +1,57 @@
+1 - url : 'profileById/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+2 - url : 'allProfiles/'
+    view : get_all_profiles
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+
+3 - url : 'searchProfile/'
+    view : search_profiles
+    Type : GET
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            user_id : darshan (Value : A name by which a user can search for another user.)
+
+4 - url : 'fullProfileById/'
+    view : get_full_profile_by_id
+    Type : GET
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+5 - url : 'changeProfilePicture/'
+    view : change_profile_picture
+    Type : POST
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            change_profile_picture : File (Value: an image which a user wants to change as a profile picture)
+
+6 - url : 'changeProfileDescription/'
+    view : change_profile_description
+    Type : POST
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            change_profile_description : Text (Value: Bio of a user)
