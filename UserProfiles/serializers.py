@@ -1,9 +1,12 @@
 from rest_framework import serializers
+
 from .models import UserProfile
 
 
 class RegisterUserProfileSerializer(serializers.ModelSerializer):
-
+    """
+    This serializer class is used for the a new user's registration of UserProfile.
+    """
     class Meta:
         # Model to be serialized
         model = UserProfile
@@ -14,6 +17,9 @@ class RegisterUserProfileSerializer(serializers.ModelSerializer):
 
 
 class SmallDataUserProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer used to only fetch a user's userProfilePicture and userProfileId
+    """
     class Meta:
         # Model to be serialized
         model = UserProfile
@@ -24,7 +30,9 @@ class SmallDataUserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer used to fetch all the data of a user's UserProfile.
+    """
     class Meta:
         # Model to be serialized
         model = UserProfile
