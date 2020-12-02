@@ -1,10 +1,13 @@
 from rest_framework.response import Response
-from .models import UserProfile
-from .serializers import UserProfileSerializer, SmallDataUserProfileSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+
+from .models import UserProfile
+from .serializers import UserProfileSerializer, SmallDataUserProfileSerializer
+
 from Account.models import Account
 from Account.serializers import AccountSerializer, SmallDataAccountSerializer
+
 from UserRelationship.models import UserRelationship
 
 # Create your views here.
