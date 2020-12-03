@@ -1,0 +1,79 @@
+1 - url : 'register/'
+    view : registration_view
+    Type : POST
+    Parameters :
+        Data :
+            userid : abc
+            useremail : abc@gmail.com
+            name : A B C
+            password : abc
+            password2 : abc
+
+    Response :
+        {
+            "token" : "a69a61e9387024eb9cbb974855e0f87797872b4c"
+        }
+
+2 - url : 'login/'
+    view : rest_framework.authtoken.views.obtain_auth_token
+    Type : GET
+    Parameters :
+        Data :
+            username : abc
+            password : abc
+
+    Response :
+        {
+            "token" : "a69a61e9387024eb9cbb974855e0f87797872b4c"
+        }
+
+3 - url : 'changeUserid/'
+    view : change_userid
+    Type : POST
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            userid : abcba (Value : userProfileId of the user)
+
+    Response :
+        {
+            "userid": "abcba",
+            "useremail": "abc@gmail.com",
+            "name": "A B C"
+        }
+
+4 - url : 'changePassword/'
+    view : change_password
+    Type : POST
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            old_password : abc
+            password : abcba
+            password2 : abcba
+
+    Response :
+        [
+            true
+        ]
+
+5 - url : 'changeName/'
+    view : change_name
+    Type : POST
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            name : A B C B A
+
+    Response :
+        {
+            "userid": "abcba",
+            "useremail": "abc@gmail.com",
+            "name": "A B C B A"
+        }

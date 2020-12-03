@@ -1,0 +1,99 @@
+1 - url : 'relationshipRequest/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+2 - url : 'followings/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+3 - url : 'followers/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+4 - url : 'pendingRelationships/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+5 - url : 'followingCount/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+6 - url : 'followerCount/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+7 - url : 'blockRelation/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+8 - url : 'declineRelation/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+9 - url : 'acceptRelation/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+
+10 - url : 'cancelRelation/'
+    view : get_small_profile_by_id
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested: 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
