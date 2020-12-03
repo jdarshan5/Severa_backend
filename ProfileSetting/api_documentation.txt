@@ -1,0 +1,17 @@
+1 - url : 'getProfileSetting/'
+    view : get_profile_setting
+    Type : GET
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested : 420779d3-a7a0-4c77-a160-de7c3df5b728
+
+2 - url : 'alterProtection/'
+    view : alter_profile_protection
+    Type : POST
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
