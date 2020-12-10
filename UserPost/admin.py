@@ -3,7 +3,12 @@ from .models import UserPost, PostLike, PostTag, PostComment, PostHashtag
 
 # Register your models here.
 
-admin.site.register(UserPost)
+
+class UserPostAdmin(admin.ModelAdmin):
+    readonly_fields = ['postId', ]
+
+
+admin.site.register(UserPost, UserPostAdmin)
 admin.site.register(PostLike)
 admin.site.register(PostComment)
 admin.site.register(PostTag)

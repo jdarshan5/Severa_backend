@@ -1,0 +1,120 @@
+1 - url : 'registerPost/'
+    view : register_post
+    Type : POST
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            postContent : File (Image or Video)
+            postDescription : "THE TAJ MAHAL"
+
+    Response:
+        {
+            "userProfileId": 3,
+            "postId": "647bf6e6-25b5-4a67-bdf6-78291bf82e9d",
+            "postContent": "/media/UserPost/Taj.jpg",
+            "postDescription": "THE TAJ MAHAL",
+            "postTime": "2020-12-03T12:16:25.160187Z",
+            "postStatus": 0
+        }
+
+2 - url : 'updatePost/'
+    view : update_post
+    Type : PUT
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            postId : 647bf6e6-25b5-4a67-bdf6-78291bf82e9d
+            postDescription : THE GREAT TAJ MAHAL
+
+    Response :
+        {
+            "userProfileId": 3,
+            "postId": "647bf6e6-25b5-4a67-bdf6-78291bf82e9d",
+            "postContent": "/media/UserPost/Taj.jpg",
+            "postDescription": "THE GREAT TAJ MAHAL",
+            "postTime": "2020-12-03T12:16:25.160187Z",
+            "postStatus": 0
+        }
+
+
+3 - url : 'deletePost/'
+    view : delete_post
+    Type : DELETE
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            postId : 647bf6e6-25b5-4a67-bdf6-78291bf82e9d
+
+    Response :
+        [
+            "POST deleted"
+        ]
+
+4 - url : 'myPosts/'
+    view : get_my_all_posts
+    Type : GET
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+
+5 - url : 'requestPost/'
+    view : get_post_of_user
+    Type : GET
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            requested : 420779d3-a7a0-4c77-a160-de7c3df5b728
+
+    Response :
+        {
+        }
+
+5 - url : 'likePost/'
+    view : like_post
+    Type : POST
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            postId : 647bf6e6-25b5-4a67-bdf6-78291bf82e9d
+
+6 - url : 'unlikePost/'
+    view : unlike_post
+    Type : DELETE
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            postId : 647bf6e6-25b5-4a67-bdf6-78291bf82e9d
+
+7 - url : 'postComment/'
+    view : post_comment
+    Type : POST
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            postId : 647bf6e6-25b5-4a67-bdf6-78291bf82e9d
+            commentDescription : Nice Photo...
+
+5 - url : 'likePost/'
+    view : like_post
+    Type : POST
+    Parameter :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization: Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            postId : 647bf6e6-25b5-4a67-bdf6-78291bf82e9d

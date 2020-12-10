@@ -13,7 +13,14 @@ class UserRelationship(models.Model):
     relationshipId : Unique id of all the relations between two users. E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     followerId : A user who follows someone, contains userProfileId. E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     followingId : A user who gets followed, contains userProfileId. E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
-    relationshipStatus : Status of a relationship. E.g.: 0-Pending, 1-Accepted, 2-Cancel, 3-Blocked, 4-Decline, 5-Restricted
+    relationshipStatus : Status of a relationship.
+        E.g.: 0-Pending : A user sends a request to other user who has private profile,
+            1-Accepted : There exists a relationship between two user,
+            2-Canceled : A user unfollows another user,
+            3-Blocked : A user blocks another user,
+            4-Decline : When a user cancels a pending request,
+            5-Restricted : ...
+    relationshipCreatedTime : Time at which a relationship is created whether relationshipStatus is 0, 1, 2, or anything
     """
     relationshipId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     followerId = models.ForeignKey(UserProfile,
