@@ -3,6 +3,17 @@ from .models import UserConversation, UserMessages, SharedFile
 
 # Register your models here.
 
-admin.site.register(UserConversation)
-admin.site.register(UserMessages)
+
+class UserConversationAdmin(admin.ModelAdmin):
+    readonly_fields = ['conversationId', ]
+
+
+admin.site.register(UserConversation, UserConversationAdmin)
+
+
+class UserMessagesAdmin(admin.ModelAdmin):
+    readonly_fields = ['messageId', ]
+
+
+admin.site.register(UserMessages, UserMessagesAdmin)
 admin.site.register(SharedFile)

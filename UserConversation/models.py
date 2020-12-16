@@ -16,10 +16,10 @@ class UserConversation(models.Model):
     """
     conversationId = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     messageSender = models.ForeignKey(UserProfile,
-                                      on_delete=models.CASCADE,
+                                      on_delete=models.DO_NOTHING,
                                       related_name='userProfileIdOfTheMessageSender')
     messageReceiver = models.ForeignKey(UserProfile,
-                                        on_delete=models.CASCADE,
+                                        on_delete=models.DO_NOTHING,
                                         related_name='userProfileIdOfTheMessageReceiver')
 
     def __str__(self):

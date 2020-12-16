@@ -69,11 +69,74 @@ def delete_conversation(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_messages(request):
-    pass
+def get_messages_between_two_user(request):
+    lst = []
+    user_account = request.user
+    user_profile = UserProfile.objects.get(userId=user_account)
+    conversation_id1 = request.data['conversationId1']
+    conversation_id2 = request.data['conversationId2']
+    conversation1 = UserConversation.objects.get(conversationId=conversation_id1)
+    conversation2 = UserConversation.objects.get(conversationId=conversation_id2)
+    # conversation1_serializer = UserConversationSerializer(conversation1)
+    # conversation2_serializer = UserConversationSerializer(conversation2)
+    conversation1_messages = UserMessages.objects.filter(conversationId=conversation1)
+    conversation2_messages = UserMessages.objects.filter(conversationId=conversation2)
+    message1_serializer = UserMessagesSerializer(conversation1_messages, many=True)
+    message2_serializer = UserMessagesSerializer(conversation2_messages, many=True)
+    # messages_1 = np.array(message1_serializer.data)
+    # messages_2 = np.array(message2_serializer.data)
+    for msg in message1_serializer.data:
+        dic = {'userProfileId': user_profile.userProfileId,
+               'conversationId': msg['conversationId'],
+               'messageId': msg['messageId'],
+               'messageSentTime': msg['messageSentTime'],
+               'messageReceivedTime': msg['messageReceivedTime'],
+               'messageType': msg['messageType'],
+               'messageContent': msg['messageContent'],
+               'messageStatus': msg['messageStatus'],
+               'messageReadTime': msg['messageReadTime']}
+        lst.append(dic)
+    for msg in message2_serializer.data:
+        dic = {'userProfileId': user_profile.userProfileId,
+               'conversationId': msg['conversationId'],
+               'messageId': msg['messageId'],
+               'messageSentTime': msg['messageSentTime'],
+               'messageReceivedTime': msg['messageReceivedTime'],
+               'messageType': msg['messageType'],
+               'messageContent': msg['messageContent'],
+               'messageStatus': msg['messageStatus'],
+               'messageReadTime': msg['messageReadTime']}
+        lst.append(dic)
+
+    def select_time(val):
+        return val['messageSentTime']
+    lst.sort(key=select_time, reverse=True)
+    return Response(lst)
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_a_message(request):
-    pass
+    user_account = request.user
+    user_profile = UserProfile.objects.get(userId=user_account)
+    message_id = request.POST['messageId']
+    conversation_id = request.POST['conversationId']
+    conversation = UserConversation.objects.filter(messageSender=user_profile).filter(conversationId=conversation_id)
+    message = UserMessages.objects.filter(conversationId=conversation[0]).filter(messageId=message_id)
+    message[0].delete()
+    return Response({'status': 'success'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_list_of_conversation(request):
+    """
+    This view is used to get all the list of conversation a user have.
+    :param request:
+    :return:
+    """
+    user_account = request.user
+    user_profile = UserProfile.objects.get(userId=user_account)
+    conversation = UserConversation.objects.filter(messageSender=user_profile)
+    serializer = UserConversationSerializer(conversation, many=True)
+    return Response(serializer.data)
