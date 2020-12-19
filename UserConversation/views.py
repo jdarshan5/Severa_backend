@@ -10,6 +10,8 @@ from UserConversation.models import UserConversation, UserMessages, SharedFile
 
 from UserConversation.serializers import UserConversationSerializer, UserMessagesSerializer, SharedFileSerializer
 
+from datetime import datetime
+
 # Create your views here.
 
 
@@ -18,7 +20,7 @@ from UserConversation.serializers import UserConversationSerializer, UserMessage
 def send_message(request):
     user_account = request.user
     user_profile = UserProfile.objects.get(userId=user_account)
-    msg_to_profile = UserProfile.objects.get(userProfileId=request.data['msgToId'])
+    msg_to_profile = UserProfile.objects.get(userProfileId=request.data['messageToId'])
     conversation = UserConversation.objects.filter(messageSender=user_profile).filter(messageReceiver=msg_to_profile)
     if not conversation:
         data = {'messageSender': user_profile.id, 'messageReceiver': msg_to_profile.id}
@@ -114,7 +116,7 @@ def get_messages_between_two_user(request):
     return Response(lst)
 
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_a_message(request):
     user_account = request.user
@@ -140,3 +142,39 @@ def get_list_of_conversation(request):
     conversation = UserConversation.objects.filter(messageSender=user_profile)
     serializer = UserConversationSerializer(conversation, many=True)
     return Response(serializer.data)
+
+
+def date_time_object_from_time_stamp(time_stamp):
+    return datetime.fromtimestamp(time_stamp)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def message_received(request):
+    message_id = request.data['messageId']
+    conversation_id = request.data['conversationId']
+    received_time = date_time_object_from_time_stamp(int(request.data['timeStamp']))
+    conversation = UserConversation.objects.get(conversationId=conversation_id)
+    message = UserMessages.objects.filter(conversationId=conversation).filter(messageId=message_id)[0]
+    message_serializer = UserMessagesSerializer(message, data={'messageReceivedTime': received_time}, partial=True)
+    if message_serializer.is_valid():
+        message_serializer.save()
+    else:
+        return Response(message_serializer.errors)
+    return Response(message_serializer.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def message_read(request):
+    message_id = request.data['messageId']
+    conversation_id = request.data['conversationId']
+    read_time = date_time_object_from_time_stamp(int(request.data['timeStamp']))
+    conversation = UserConversation.objects.get(conversationId=conversation_id)
+    message = UserMessages.objects.filter(conversationId=conversation).filter(messageId=message_id)[0]
+    message_serializer = UserMessagesSerializer(message, data={'messageReadTime': read_time}, partial=True)
+    if message_serializer.is_valid():
+        message_serializer.save()
+    else:
+        return Response(message_serializer.errors)
+    return Response(message_serializer.data)

@@ -1,0 +1,75 @@
+1 - url : 'sendMessage/'
+    view : send_message
+    Type : POST
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization : Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            messageToId : 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : userProfileId of the user)
+            messageType : 0
+            messageContent : (Type your message here)
+
+    Response :
+        {
+            "conversationId": 3,
+            "messageId": "5e85ca39-4e30-466e-be12-8e727aaf2e04",
+            "messageSentTime": "2020-12-16T10:03:01.438467Z",
+            "messageReceivedTime": null,
+            "messageType": 0,
+            "messageContent": "(Type msg here.)",
+            "messageStatus": 1,
+            "messageReadTime": null
+        }
+
+2 - url : 'listOfMyConversation/'
+    view : get_list_of_conversation
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization : Token a3e1a892132977fa3844f7663ac1530707c51ebd
+
+    Response :
+        [
+            {
+                "conversationId": "a521a503-d1cc-4307-8810-bb3ebeff0c99",
+                "messageSender": 1,
+                "messageReceiver": 3
+            },
+            {
+                "conversationId": "03dc6f2c-423d-481e-b247-ca8570ec10bc",
+                "messageSender": 1,
+                "messageReceiver": 1
+            }
+        ]
+
+3 - url : 'deleteMessage/'
+    view : delete_a_message
+    Type : DELETE
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization : Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            messageId : 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : Id of the message)
+            conversationId : 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : Id of the conversation)
+
+    Response :
+        {
+            "status": "success"
+        }
+
+4 - url : 'conversationMessages/'
+    view : get_messages_between_two_user
+    Type : GET
+    Parameters :
+        Header :
+            (Token provided to a user when a he/she logs in.)
+            Authorization : Token a3e1a892132977fa3844f7663ac1530707c51ebd
+        Data :
+            conversationId1 : 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : Id of the conversation)
+            conversationId2 : 733b557a-6b18-40a9-8965-e4f76fd0a271 (Value : Id of the conversation)
+
+    Response :
+        Multiple response like sendMessage's response.
