@@ -111,6 +111,5 @@ class PostHashtag(models.Model):
     postId             : Unique Id for the Post.                 E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     hashtagId          : Id of the hashtag.                      E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     """
-    userProfileId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     postId = models.ForeignKey(UserPost, on_delete=models.CASCADE, related_name='postIdOfThePostWhichGotHashtag')
     hashtagId = models.ForeignKey(Hashtag, on_delete=models.CASCADE, related_name='hashtagIdInThePostWhichAreUsed')
