@@ -12,4 +12,8 @@ urlpatterns = [
     path('', include('UserPost.urls')),
     path('', include('ProfileSetting.urls')),
     path('', include('UserConversation.urls')),
+    path('', include('Hashtags.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.autodiscover()
+admin.site.enable_nav_sidebar = False

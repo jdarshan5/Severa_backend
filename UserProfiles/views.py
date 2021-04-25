@@ -112,3 +112,12 @@ def change_profile_description(request):
         return Response(serializer.data)
     else:
         return Response(serializer.errors)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_profile_id(request):
+    data = {}
+    user_profile = UserProfile.objects.get(userId=request.user)
+    data['userProfileId'] = user_profile.userProfileId
+    return Response(data)

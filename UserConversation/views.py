@@ -109,10 +109,7 @@ def get_messages_between_two_user(request):
                'messageStatus': msg['messageStatus'],
                'messageReadTime': msg['messageReadTime']}
         lst.append(dic)
-
-    def select_time(val):
-        return val['messageSentTime']
-    lst.sort(key=select_time, reverse=True)
+    lst.sort(key=lambda val: val['messageSentTime'], reverse=True)
     return Response(lst)
 
 

@@ -18,7 +18,7 @@ class UserCreationForm(forms.ModelForm):
         # form of the model.
         model = Account
         # fields of the model whihc are needed to be seen when creating an instance of the model.
-        fields = ['userid', 'useremail']
+        fields = ['userid', 'useremail', 'name']
 
     def clean_password2(self):
         # Checking that the two passwords which are entered do match and are entered.
@@ -45,7 +45,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('userid', 'useremail', 'is_active', 'is_staff', 'is_admin')
+        fields = ('userid', 'useremail', 'name', 'is_active', 'is_staff', 'is_admin')
 
     def clean_password(self):
         return self.initial['password']
@@ -73,7 +73,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('userid', 'useremail', 'password1', 'password2'),
+            'fields': ('userid', 'useremail', 'name', 'password1', 'password2'),
         }),
     )
     search_fields = ('userid', )

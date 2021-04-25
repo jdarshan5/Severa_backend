@@ -36,10 +36,10 @@ class PostSubCommentSerializer(serializers.ModelSerializer):
 class PostTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostTag
-        fields = ['userProfileId', 'postId', 'postTagId']
+        fields = ['taggedUserId', 'postId', 'postTagId']
 
 
 class PostHashtagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostHashtag
-        fields = ['userProfileId', 'postId', 'hashtagId']
+        fields = ['postId', 'hashtagId']
