@@ -8,10 +8,13 @@ from UserProfiles.serializers import SmallDataUserProfileSerializer
 
 from ProfileSetting.models import UserSetting
 
+from Account.models import Account
 from Account.serializers import SmallDataAccountSerializer
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+
+from fcm_django.models import FCMDevice
 
 # Create your views here.
 
@@ -43,8 +46,9 @@ def request_relationship(request):
     data = {}
     user_profile = UserProfile.objects.get(userId=request.user)
     data['followerId'] = user_profile.id
+    print(request.POST.get('requested', ''))
     try:
-        requested_profile = UserProfile.objects.get(userProfileId=request.POST['requested'])
+        requested_profile = UserProfile.objects.get(userProfileId=request.POST.get('requested', ''))
         data['followingId'] = requested_profile.id
     except UserProfile.DoesNotExist:
         return Response({'Error': 'DoesNotExist'})
@@ -56,12 +60,20 @@ def request_relationship(request):
             serializer = UserRelationshipSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
+                requested_profile_devices = FCMDevice.objects.filter(user=requested_profile.userid)
+                for device in requested_profile_devices:
+                    device.send_message(title='Profile Request',
+                                        body=user_profile.userid.name + ' Started Following You.')
                 return Response(serializer.data)
         else:
-            data['relationshipStatus'] = 0
+            data['relationshipStatus'] = 2
             serializer = UserRelationshipSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
+                requested_profile_devices = FCMDevice.objects.filter(user=requested_profile.userid)
+                for device in requested_profile_devices:
+                    device.send_message(title='Profile Request',
+                                        body=user_profile.userid.name + ' Has Sent You A Request.')
                 return Response(serializer.data)
     else:
         if relation[0].relationshipStatus == 1:
@@ -72,6 +84,10 @@ def request_relationship(request):
                 serializer = UserRelationshipSerializer(data=data)
                 if serializer.is_valid():
                     serializer.save()
+                    requested_profile_devices = FCMDevice.objects.filter(user=requested_profile.userid)
+                    for device in requested_profile_devices:
+                        device.send_message(title='Profile Request',
+                                            body=user_profile.userid.name + ' Started Following You.')
                     return Response(serializer.data)
             else:
                 data['relationshipStatus'] = 0
@@ -93,8 +109,7 @@ def get_my_following_relationships(request):
     :return:
     """
     lst = []
-    user_account = request.user
-    user_profile = UserProfile.objects.get(userId=user_account)
+    user_profile = UserProfile.objects.get(userProfileId=request.GET['requested'])
     user_relationship = UserRelationship.objects.filter(followerId=user_profile).filter(relationshipStatus=1)
     for r in user_relationship:
         data = {}
@@ -117,8 +132,7 @@ def get_my_follower_relationships(request):
     :return:
     """
     lst = []
-    user_account = request.user
-    user_profile = UserProfile.objects.get(userId=user_account)
+    user_profile = UserProfile.objects.get(userProfileId=request.GET['requested'])
     user_relationship = UserRelationship.objects.filter(followingId=user_profile).filter(relationshipStatus=1)
     for r in user_relationship:
         data = {}
@@ -146,9 +160,9 @@ def pending_relationships(request):
     return Response(serializer.data)
 
 
-def following_count_value(user_account, following=True):
+def following_count_value(user_profile_id, following=True):
     try:
-        user_profile = UserProfile.objects.get(userId=user_account)
+        user_profile = UserProfile.objects.get(userProfileId=user_profile_id)
     except UserProfile.DoesNotExist:
         return None
     if following:
@@ -165,25 +179,22 @@ def following_count(request):
     :param request:
     :return:
     """
-    data = {}
-    user_account = request.user
-    if user_account is not None:
-        data['followings'] = following_count_value(user_account)
-    else:
-        return Response({})
+    # data = {'followings': following_count_value(request.GET['requested'])}
+    user_profile = UserProfile.objects.get(userProfileId=request.GET['requested'])
+    data = {'followings': UserRelationship.objects.filter(followerId=user_profile).filter(relationshipStatus=1).count()}
     return Response(data)
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def follower_count(request):
-    """Get no. of followers of a user."""
-    data = {}
-    user_account = request.user
-    if user_account is not None:
-        data['followers'] = following_count_value(user_account, following=False)
-    else:
-        return Response({})
+    """Get no. of followers of a user.
+    :param request:
+    :return:
+    """
+    # data = {'followers': following_count_value(request.GET['requested'], following=False)}
+    user_profile = UserProfile.objects.get(userProfileId=request.GET['requested'])
+    data = {'followers': UserRelationship.objects.filter(followingId=user_profile).filter(relationshipStatus=1).count()}
     return Response(data)
 
 
@@ -261,6 +272,10 @@ def accept_relationship(request):
         serializer = UserRelationshipSerializer(relation, data={'relationshipStatus': 1}, partial=True)
         if serializer.is_valid():
             serializer.save()
+            requested_profile_devices = FCMDevice.objects.filter(user=requested_profile.userid)
+            for device in requested_profile_devices:
+                device.send_message(title='Profile Request',
+                                    body=user_profile.userid.name + ' Has Accepted Your Request.')
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
@@ -281,3 +296,23 @@ def cancel_relationship(request):
         else:
             return Response(serializer.errors)
     return Response({})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search_followings(request):
+    # user_profile = UserProfile.objects.get(userId=request.user)
+    requested_accounts = Account.objects.filter(userid__contains=request.GET.get('user_id', ''))
+    profile_data = []
+    for account in requested_accounts:
+        data = {}
+        account_serializer = SmallDataAccountSerializer(account)
+        data.update(account_serializer.data)
+        profile = UserProfile.objects.get(userId=account)
+        profile_serializer = SmallDataUserProfileSerializer(profile)
+        data.update(profile_serializer.data)
+        profile_data.append(data)
+    return Response(profile_data)
+    # profiles = UserRelationship.objects.filter(followerId=user_profile).filter(followingId__in=requested_profiles)
+    # serializer = SmallDataUserProfileSerializer(profiles, many=True)
+    # return Response(serializer.data)

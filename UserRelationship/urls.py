@@ -13,4 +13,5 @@ urlpatterns = [
     path('declineRelation/', views.decline_relationship),
     path('acceptRelation/', views.accept_relationship),
     path('cancelRelation/', views.cancel_relationship),
+    path('searchFollowings/', views.search_followings),
 ]
