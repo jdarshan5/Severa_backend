@@ -3,4 +3,10 @@ from .models import Hashtag
 
 # Register your models here.
 
-admin.site.register(Hashtag)
+
+class HashtagAdmin(admin.ModelAdmin):
+    readonly_fields = ['hashtagId']
+    ordering = ['hashtagName']
+
+
+admin.site.register(Hashtag, HashtagAdmin)

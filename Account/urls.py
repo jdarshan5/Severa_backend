@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from Account import views
 
 from rest_framework.authtoken.views import obtain_auth_token
@@ -15,4 +15,6 @@ urlpatterns = [
     path('changeUserid/', views.change_userid),
     path('changePassword/', views.change_password),
     path('changeName/', views.change_name),
+    path('checkUserid/', views.check_userid),
+    path('rest-auth/', include('rest_auth.urls')),
 ]
