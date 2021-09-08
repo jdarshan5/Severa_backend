@@ -39,6 +39,7 @@ class UserMessages(models.Model):
     messageStatus         : Status whether the msg is read or not        E.g.: 0-read, 1-unread
     messageReadTime       : What was the time when the user who received the msg read it.
     """
+    # messageSender
     conversationId = models.ForeignKey(UserConversation, on_delete=models.DO_NOTHING)
     messageId = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     messageSentTime = models.DateTimeField(auto_now_add=True)

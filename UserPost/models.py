@@ -1,5 +1,9 @@
 from django.db import models
 
+from django.db.models.signals import post_delete
+
+from django.dispatch.dispatcher import receiver
+
 from UserProfiles.models import UserProfile
 from Hashtags.models import Hashtag
 
@@ -28,6 +32,13 @@ class UserPost(models.Model):
 
     def __str__(self):
         return str(self.userProfileId) + ' - ' + str(self.postId)
+
+
+@receiver(post_delete, sender=UserPost)
+def user_post_delete(sender, instance, **kwargs):
+    photo = instance
+    storage, path = photo.postContent.storage, photo.postContent.path
+    storage.delete(path)
 
 
 class PostLike(models.Model):
@@ -95,13 +106,14 @@ class PostTag(models.Model):
     postId             : Id of the Post.                  E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     postTagId          : Unique postTag Id.               E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
     """
-    userProfileId = models.ForeignKey(UserProfile,
-                                      on_delete=models.CASCADE,
-                                      related_name='userProfileIdOfTheUserWhoGotTaggedInPost')
+    taggedUserId = models.ForeignKey(UserProfile,
+                                     on_delete=models.CASCADE,
+                                     related_name='userProfileIdOfTheUserWhoGotTaggedInPost')
     postId = models.ForeignKey(UserPost,
                                on_delete=models.CASCADE,
                                related_name='postIdOfThePostWhichGotTags')
     postTagId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    index = models.IntegerField(default=0)
 
 
 class PostHashtag(models.Model):

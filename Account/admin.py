@@ -17,7 +17,7 @@ class UserCreationForm(forms.ModelForm):
     class Meta:
         # form of the model.
         model = Account
-        # fields of the model whihc are needed to be seen when creating an instance of the model.
+        # fields of the model which are needed to be seen when creating an instance of the model.
         fields = ['userid', 'useremail']
 
     def clean_password2(self):

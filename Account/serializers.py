@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 from Account.models import Account
 
-""" (((^^^NOTE^^^))) :- To update only one or lesser than total no of fields you have to enter ^^^partial=True^^^ in instantiating
-    serializer of a model instance who already exists. """
+""" (((^^^NOTE^^^))) :- To update only one or lesser than total no of fields you have to enter ^^^partial=True^^^ in 
+    instantiating serializer of a model instance who already exists. """
 
 
 class SmallDataAccountSerializer(serializers.ModelSerializer):

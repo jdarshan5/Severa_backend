@@ -13,6 +13,8 @@ from Account.models import Account
 
 from django.contrib.auth.hashers import check_password
 
+from fcm_django.models import FCMDevice
+
 # Create your views here.
 
 
@@ -102,7 +104,6 @@ def reset_password(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def check_userid(request):
     """
     This view checks whether a userid passed as parameter already exists in the Database or not.
@@ -110,9 +111,39 @@ def check_userid(request):
     :param request:
     :return:
     """
-    requested_userid = request.data['userId']
-    userid_account = Account.objects.get(userid=requested_userid)
-    if not userid_account:
-        return Response({0})
-    else:
+    requested_userid = request.GET['userId']
+    try:
+        Account.objects.get(userid=requested_userid)
         return Response({'Error': 'Userid exists.'})
+    except Account.DoesNotExist:
+        return Response(0)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def register_device(request):
+    user_account = request.user
+    registration_id = request.POST.get('registration_id', '')
+    device_type = request.POST.get('device_type', '')
+    device = FCMDevice(registration_id=registration_id, user=user_account, name=user_account.userid, type=device_type)
+    device.save()
+    return Response({'device': 'registered'})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def unregister_device(request, device_id):
+    user_account = request.user
+    device = FCMDevice.objects.filter(user=user_account).filter(device_id=device_id)[0]
+    device.delete()
+    return Response({'device': 'unregistered'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def test_message(request):
+    user_account = request.user
+    devices = FCMDevice.objects.filter(user=user_account)
+    for device in devices:
+        device.send_message(title='Test Message', body='Hello. This is a Test Message.')
+    return Response([])

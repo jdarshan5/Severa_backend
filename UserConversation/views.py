@@ -12,6 +12,8 @@ from UserConversation.serializers import UserConversationSerializer, UserMessage
 
 from datetime import datetime
 
+from fcm_django.models import FCMDevice
+
 # Create your views here.
 
 
@@ -20,35 +22,44 @@ from datetime import datetime
 def send_message(request):
     user_account = request.user
     user_profile = UserProfile.objects.get(userId=user_account)
-    msg_to_profile = UserProfile.objects.get(userProfileId=request.data['messageToId'])
+    msg_to_profile = UserProfile.objects.get(userProfileId=request.POST.get('messageToId', ''))
     conversation = UserConversation.objects.filter(messageSender=user_profile).filter(messageReceiver=msg_to_profile)
     if not conversation:
         data = {'messageSender': user_profile.id, 'messageReceiver': msg_to_profile.id}
+        data2 = {'messageSender': msg_to_profile.id, 'messageReceiver': user_profile.id}
         conversation_serializer = UserConversationSerializer(data=data)
         if conversation_serializer.is_valid():
-            conversation = conversation_serializer.save()
-            msg_data = {'conversationId': conversation.id, 'messageType': request.data['messageType']}
-            if msg_data['messageType'] == 0 or msg_data['messageType'] == 2:
-                msg_data['messageContent'] = request.data['messageContent']
-            elif msg_data['messageType'] == 1:
-                shared_file_data = {'data': request.data['messageContent']}
-                shared_file_serializer = SharedFileSerializer(data=shared_file_data)
-                if shared_file_serializer.is_valid():
-                    shared_file = shared_file_serializer.save()
-                    msg_data['messageContent'] = shared_file.referenceId
-            user_message_serializer = UserMessagesSerializer(data=msg_data)
-            if user_message_serializer.is_valid():
-                user_message_serializer.save()
-                return Response(user_message_serializer.data)
+            conversation_1_serializer = UserConversationSerializer(data=data2)
+            if conversation_1_serializer.is_valid():
+                conversation_1_serializer.save()
+                conversation = conversation_serializer.save()
+                msg_data = {'conversationId': conversation.id, 'messageType': request.POST.get('messageType', '')}
+                if msg_data['messageType'] == 0 or msg_data['messageType'] == 2:
+                    msg_data['messageContent'] = request.POST.get('messageContent', '')
+                elif msg_data['messageType'] == 1:
+                    shared_file_data = {'data': request.POST.get('messageContent', '')}
+                    shared_file_serializer = SharedFileSerializer(data=shared_file_data)
+                    if shared_file_serializer.is_valid():
+                        shared_file = shared_file_serializer.save()
+                        msg_data['messageContent'] = shared_file.referenceId
+                user_message_serializer = UserMessagesSerializer(data=msg_data)
+                if user_message_serializer.is_valid():
+                    user_message_serializer.save()
+                    requested_profile_device = FCMDevice.objects.filter(user=msg_to_profile.userid)
+                    for device in requested_profile_device:
+                        device.send_message(title='Message', body=user_account.name + ': ' + request.POST.get('messageContent', ''))
+                    return Response(user_message_serializer.data)
+                else:
+                    return Response(user_message_serializer.errors)
             else:
-                return Response(user_message_serializer.errors)
+                return Response(conversation_1_serializer.errors)
         else:
             return Response(conversation_serializer.errors)
     else:
-        data = {'conversationId': conversation[0].id, 'messageType': request.data['messageType'],
-                'messageContent': request.data['messageContent']}
+        data = {'conversationId': conversation[0].id, 'messageType': request.POST.get('messageType', ''),
+                'messageContent': request.POST.get('messageContent', '')}
         if int(data['messageType']) == 2:
-            shared_file_data = {'data': request.data['messageContent']}
+            shared_file_data = {'data': request.POST.get('messageContent', '')}
             shared_file_serializer = SharedFileSerializer(data=shared_file_data)
             if shared_file_serializer.is_valid():
                 shared_file = shared_file_serializer.save()
@@ -75,40 +86,42 @@ def get_messages_between_two_user(request):
     lst = []
     user_account = request.user
     user_profile = UserProfile.objects.get(userId=user_account)
-    conversation_id1 = request.data['conversationId1']
-    conversation_id2 = request.data['conversationId2']
-    conversation1 = UserConversation.objects.get(conversationId=conversation_id1)
-    conversation2 = UserConversation.objects.get(conversationId=conversation_id2)
-    # conversation1_serializer = UserConversationSerializer(conversation1)
-    # conversation2_serializer = UserConversationSerializer(conversation2)
-    conversation1_messages = UserMessages.objects.filter(conversationId=conversation1)
-    conversation2_messages = UserMessages.objects.filter(conversationId=conversation2)
-    message1_serializer = UserMessagesSerializer(conversation1_messages, many=True)
-    message2_serializer = UserMessagesSerializer(conversation2_messages, many=True)
-    # messages_1 = np.array(message1_serializer.data)
-    # messages_2 = np.array(message2_serializer.data)
-    for msg in message1_serializer.data:
-        dic = {'userProfileId': user_profile.userProfileId,
-               'conversationId': msg['conversationId'],
-               'messageId': msg['messageId'],
-               'messageSentTime': msg['messageSentTime'],
-               'messageReceivedTime': msg['messageReceivedTime'],
-               'messageType': msg['messageType'],
-               'messageContent': msg['messageContent'],
-               'messageStatus': msg['messageStatus'],
-               'messageReadTime': msg['messageReadTime']}
-        lst.append(dic)
-    for msg in message2_serializer.data:
-        dic = {'userProfileId': user_profile.userProfileId,
-               'conversationId': msg['conversationId'],
-               'messageId': msg['messageId'],
-               'messageSentTime': msg['messageSentTime'],
-               'messageReceivedTime': msg['messageReceivedTime'],
-               'messageType': msg['messageType'],
-               'messageContent': msg['messageContent'],
-               'messageStatus': msg['messageStatus'],
-               'messageReadTime': msg['messageReadTime']}
-        lst.append(dic)
+    requested_profile = UserProfile.objects.get(userProfileId=request.GET.get('requested', ''))
+    try:
+        conversation_id1 = UserConversation.objects.filter(messageSender=user_profile).filter(messageReceiver=requested_profile)[0]
+        conversation1_messages = UserMessages.objects.filter(conversationId=conversation_id1)
+        message1_serializer = UserMessagesSerializer(conversation1_messages, many=True)
+        for msg in message1_serializer.data:
+            dic = {'userProfileId': user_profile.userProfileId,
+                   'conversationId': conversation_id1.conversationId,
+                   'messageId': msg['messageId'],
+                   'messageSentTime': msg['messageSentTime'],
+                   'messageReceivedTime': msg['messageReceivedTime'],
+                   'messageType': msg['messageType'],
+                   'messageContent': msg['messageContent'],
+                   'messageStatus': msg['messageStatus'],
+                   'messageReadTime': msg['messageReadTime']}
+            lst.append(dic)
+    except IndexError:
+        pass
+
+    try:
+        conversation_id2 = UserConversation.objects.filter(messageSender=requested_profile).filter(messageReceiver=user_profile)[0]
+        conversation2_messages = UserMessages.objects.filter(conversationId=conversation_id2)
+        message2_serializer = UserMessagesSerializer(conversation2_messages, many=True)
+        for msg in message2_serializer.data:
+            dic = {'userProfileId': requested_profile.userProfileId,
+                   'conversationId': conversation_id2.conversationId,
+                   'messageId': msg['messageId'],
+                   'messageSentTime': msg['messageSentTime'],
+                   'messageReceivedTime': msg['messageReceivedTime'],
+                   'messageType': msg['messageType'],
+                   'messageContent': msg['messageContent'],
+                   'messageStatus': msg['messageStatus'],
+                   'messageReadTime': msg['messageReadTime']}
+            lst.append(dic)
+    except IndexError:
+        pass
 
     def select_time(val):
         return val['messageSentTime']
@@ -139,9 +152,15 @@ def get_list_of_conversation(request):
     """
     user_account = request.user
     user_profile = UserProfile.objects.get(userId=user_account)
-    conversation = UserConversation.objects.filter(messageSender=user_profile)
-    serializer = UserConversationSerializer(conversation, many=True)
-    return Response(serializer.data)
+    conversations = UserConversation.objects.filter(messageSender=user_profile)
+    data = []
+    for conversation in conversations:
+        serializer = UserConversationSerializer(conversation)
+        dic = serializer.data
+        dic['messageSender'] = conversation.messageSender.userProfileId
+        dic['messageReceiver'] = conversation.messageReceiver.userProfileId
+        data.append(dic)
+    return Response(data)
 
 
 def date_time_object_from_time_stamp(time_stamp):

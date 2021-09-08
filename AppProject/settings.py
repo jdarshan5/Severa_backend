@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'UserConversation.apps.UserconversationConfig',
     'Hashtags.apps.HashtagsConfig',
     'ProfileSetting.apps.ProfilesettingConfig',
+    'fcm_django',
 ]
 
 AUTH_USER_MODEL = 'Account.Account'
@@ -59,6 +60,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
 }
 
 MIDDLEWARE = [
@@ -141,3 +144,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+FCM_DJANGO_SETTINGS = {
+    "FCM_SERVER_KEY": "AAAATYrKW4A:APA91bE1tR5alPV26qvu5zdb5-WL89juDsYY8vQVWmTqcFuZixBfsx3-lyVvTCgpsXO4TZrfDvyJDs_5dKHwF2GXbPhGNFCkGMUGrobF9uG15n_xLxeQ0HDSINF-wZhN6DcBTHHDFemi",
+    "ONE_DEVICE_PER_USER": True,
+    "DELETE_INACTIVE_DEVICES": False,
+}
