@@ -1,4 +1,4 @@
-1 - url : 'register/'
+1 - url : 'register/' Hello
     view : registration_view
     Type : POST
     Parameters :

@@ -32,4 +32,4 @@ class UserRelationship(models.Model):
     relationshipCreatedTime = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        return str(self.followerId) + " ~~~ " + str(self.followingId)
+        return str(self.followerId) + " >>> " + str(self.followingId)

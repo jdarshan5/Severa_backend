@@ -8,8 +8,9 @@ import uuid
 
 class UserProfile(models.Model):
     """
+    This model is used to store Profile picture, description and Phone number of a user for e verification.
     userId            : Unique Id of the user.                  E.g.: @darshan_javiya
-    userProfileId     : Unique Id for all the users.            E.g.: op026D49Ce5F2v80h1g97R1R13IJHQ
+    userProfileId     : Unique Id for all the users.            E.g.: op026D49Ce5F2v80h1g97R1R13IjHQ
     userProfilePicture: Profile picture of the user.
     descriptionOfUser : Information about a user of his choice.
     userPhone         : Phone number of the user.               E.g.: 1234567890
